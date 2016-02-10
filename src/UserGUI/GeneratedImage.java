@@ -121,11 +121,22 @@ public class GeneratedImage extends JPanel implements Constants {
 		}
 	}
 	
-	public void generateBiome(double relief[][], double temp[][], double humid[][], int width, int height, BufferedImage bioMap){
+	public void generateBiomeFromLookup(double relief[][], double temp[][], double humid[][], int width, int height){
 		Biome biome = new Biome(relief, temp, humid);
 		for (int y = 0; y < height; y++) {
 			for (int x = 0; x < width; x++) {
-				image.setRGB(x, y,biome.getBiomeTypeFromImage(x, y,bioMap));
+				image.setRGB(x, y,biome.getBiomeType(x, y));
+				
+				repaint();
+			}
+		}
+	}
+	
+	public void generateBiomeFromImage(double relief[][], double temp[][], double humid[][], int width, int height, BufferedImage bioMap,int xFuzz, int yFuzz){
+		Biome biome = new Biome(relief, temp, humid);
+		for (int y = 0; y < height; y++) {
+			for (int x = 0; x < width; x++) {
+				image.setRGB(x, y,biome.getBiomeTypeFromImage(x, y,bioMap,xFuzz,yFuzz));
 				
 				repaint();
 			}

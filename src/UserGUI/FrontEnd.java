@@ -19,6 +19,7 @@ import javax.swing.border.EmptyBorder;
 import Maps.HumidMap;
 import Maps.ReliefMap;
 import Maps.TempMap;
+import javax.swing.JCheckBox;
 
 public class FrontEnd extends JFrame implements ActionListener {
 
@@ -31,6 +32,12 @@ public class FrontEnd extends JFrame implements ActionListener {
 	private JButton btnBiome;
 	private JTextField biomeInField;
 	private JLabel lblBiomeInput;
+	private JLabel lblXFuzz;
+	private JLabel lblYFuzz;
+	private JTextField xFuzzField;
+	private JTextField yFuzzField;
+	private JLabel lblImage;
+	private JCheckBox lookupChk;
 
 	/**
 	 * Launch the application.
@@ -42,21 +49,21 @@ public class FrontEnd extends JFrame implements ActionListener {
 	public FrontEnd() {
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 749, 773);
+		setBounds(100, 100, 749, 770);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		GridBagLayout gbl_contentPane = new GridBagLayout();
-		gbl_contentPane.columnWidths = new int[] { 0, 50, 35, 0, 0, 0, 42, 0, 0, 0, 66, 70, 57, 0, 0, 0 };
-		gbl_contentPane.rowHeights = new int[] { 0, 0, 526, 0, 0, 0, 0, 0 };
-		gbl_contentPane.columnWeights = new double[] { 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0,
-				0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
-		gbl_contentPane.rowWeights = new double[] { 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
+		gbl_contentPane.columnWidths = new int[] { 0, 50, 35, 0, 0, 0, 42, 0, 0, 66, 70, 57, 0, 0, 0 };
+		gbl_contentPane.rowHeights = new int[] { 0, 0, 550, 0, 0, 0, 0, 0, 0 };
+		gbl_contentPane.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0,
+				0.0, Double.MIN_VALUE };
+		gbl_contentPane.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
 		contentPane.setLayout(gbl_contentPane);
 
 		lblPreview = new JLabel("Preview");
 		GridBagConstraints gbc_lblPreview = new GridBagConstraints();
-		gbc_lblPreview.gridwidth = 13;
+		gbc_lblPreview.gridwidth = 12;
 		gbc_lblPreview.insets = new Insets(0, 0, 5, 5);
 		gbc_lblPreview.gridx = 1;
 		gbc_lblPreview.gridy = 1;
@@ -64,7 +71,7 @@ public class FrontEnd extends JFrame implements ActionListener {
 
 		generatedImage = new GeneratedImage();
 		GridBagConstraints gbc_generatedImage = new GridBagConstraints();
-		gbc_generatedImage.gridwidth = 13;
+		gbc_generatedImage.gridwidth = 12;
 		gbc_generatedImage.insets = new Insets(0, 0, 5, 5);
 		gbc_generatedImage.fill = GridBagConstraints.BOTH;
 		gbc_generatedImage.gridx = 1;
@@ -80,6 +87,7 @@ public class FrontEnd extends JFrame implements ActionListener {
 
 		widthField = new JTextField();
 		GridBagConstraints gbc_widthField = new GridBagConstraints();
+		gbc_widthField.gridwidth = 2;
 		gbc_widthField.insets = new Insets(0, 0, 5, 5);
 		gbc_widthField.fill = GridBagConstraints.HORIZONTAL;
 		gbc_widthField.gridx = 2;
@@ -99,7 +107,7 @@ public class FrontEnd extends JFrame implements ActionListener {
 
 		seaField = new JTextField(4);
 		GridBagConstraints gbc_seaField = new GridBagConstraints();
-		gbc_seaField.fill = GridBagConstraints.HORIZONTAL;
+		gbc_seaField.anchor = GridBagConstraints.WEST;
 		gbc_seaField.insets = new Insets(0, 0, 5, 5);
 		gbc_seaField.gridx = 6;
 		gbc_seaField.gridy = 3;
@@ -107,7 +115,7 @@ public class FrontEnd extends JFrame implements ActionListener {
 		GridBagConstraints gbc_btnRelief = new GridBagConstraints();
 		gbc_btnRelief.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnRelief.insets = new Insets(0, 0, 5, 5);
-		gbc_btnRelief.gridx = 10;
+		gbc_btnRelief.gridx = 9;
 		gbc_btnRelief.gridy = 3;
 		contentPane.add(btnRelief, gbc_btnRelief);
 
@@ -115,7 +123,7 @@ public class FrontEnd extends JFrame implements ActionListener {
 		btnTemp.addActionListener(this);
 		GridBagConstraints gbc_btnTemp = new GridBagConstraints();
 		gbc_btnTemp.insets = new Insets(0, 0, 5, 5);
-		gbc_btnTemp.gridx = 11;
+		gbc_btnTemp.gridx = 10;
 		gbc_btnTemp.gridy = 3;
 		contentPane.add(btnTemp, gbc_btnTemp);
 
@@ -124,7 +132,7 @@ public class FrontEnd extends JFrame implements ActionListener {
 		GridBagConstraints gbc_btnHumid = new GridBagConstraints();
 		gbc_btnHumid.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnHumid.insets = new Insets(0, 0, 5, 5);
-		gbc_btnHumid.gridx = 12;
+		gbc_btnHumid.gridx = 11;
 		gbc_btnHumid.gridy = 3;
 		contentPane.add(btnHumid, gbc_btnHumid);
 
@@ -132,7 +140,7 @@ public class FrontEnd extends JFrame implements ActionListener {
 		btnBiome.addActionListener(this);
 		GridBagConstraints gbc_btnBiome = new GridBagConstraints();
 		gbc_btnBiome.insets = new Insets(0, 0, 5, 5);
-		gbc_btnBiome.gridx = 13;
+		gbc_btnBiome.gridx = 12;
 		gbc_btnBiome.gridy = 3;
 		contentPane.add(btnBiome, gbc_btnBiome);
 
@@ -145,6 +153,7 @@ public class FrontEnd extends JFrame implements ActionListener {
 
 		heightField = new JTextField();
 		GridBagConstraints gbc_heightField = new GridBagConstraints();
+		gbc_heightField.gridwidth = 2;
 		gbc_heightField.insets = new Insets(0, 0, 5, 5);
 		gbc_heightField.fill = GridBagConstraints.HORIZONTAL;
 		gbc_heightField.gridx = 2;
@@ -152,21 +161,23 @@ public class FrontEnd extends JFrame implements ActionListener {
 		contentPane.add(heightField, gbc_heightField);
 		heightField.setColumns(4);
 
-		JLabel lblOctaves = new JLabel("Octaves");
-		GridBagConstraints gbc_lblOctaves = new GridBagConstraints();
-		gbc_lblOctaves.insets = new Insets(0, 0, 5, 5);
-		gbc_lblOctaves.gridx = 5;
-		gbc_lblOctaves.gridy = 4;
-		contentPane.add(lblOctaves, gbc_lblOctaves);
+		lblBiomeInput = new JLabel("Biome Input");
+		GridBagConstraints gbc_lblBiomeInput = new GridBagConstraints();
+		gbc_lblBiomeInput.insets = new Insets(0, 0, 5, 5);
+		gbc_lblBiomeInput.anchor = GridBagConstraints.EAST;
+		gbc_lblBiomeInput.gridx = 5;
+		gbc_lblBiomeInput.gridy = 4;
+		contentPane.add(lblBiomeInput, gbc_lblBiomeInput);
 
-		octavesField = new JTextField();
-		GridBagConstraints gbc_octavesField = new GridBagConstraints();
-		gbc_octavesField.fill = GridBagConstraints.HORIZONTAL;
-		gbc_octavesField.insets = new Insets(0, 0, 5, 5);
-		gbc_octavesField.gridx = 6;
-		gbc_octavesField.gridy = 4;
-		contentPane.add(octavesField, gbc_octavesField);
-		octavesField.setColumns(4);
+		biomeInField = new JTextField();
+		GridBagConstraints gbc_biomeInField = new GridBagConstraints();
+		gbc_biomeInField.gridwidth = 2;
+		gbc_biomeInField.anchor = GridBagConstraints.SOUTHWEST;
+		gbc_biomeInField.insets = new Insets(0, 0, 5, 5);
+		gbc_biomeInField.gridx = 6;
+		gbc_biomeInField.gridy = 4;
+		contentPane.add(biomeInField, gbc_biomeInField);
+		biomeInField.setColumns(10);
 
 		JLabel lblSeed = new JLabel("Seed");
 		GridBagConstraints gbc_lblSeed = new GridBagConstraints();
@@ -177,6 +188,7 @@ public class FrontEnd extends JFrame implements ActionListener {
 
 		seedField = new JTextField();
 		GridBagConstraints gbc_seedField = new GridBagConstraints();
+		gbc_seedField.gridwidth = 2;
 		gbc_seedField.insets = new Insets(0, 0, 5, 5);
 		gbc_seedField.fill = GridBagConstraints.HORIZONTAL;
 		gbc_seedField.gridx = 2;
@@ -187,48 +199,107 @@ public class FrontEnd extends JFrame implements ActionListener {
 		btnSaveImage = new JButton("Save Image");
 		btnSaveImage.addActionListener(this);
 
-		lblBiomeInput = new JLabel("Biome Input");
-		GridBagConstraints gbc_lblBiomeInput = new GridBagConstraints();
-		gbc_lblBiomeInput.insets = new Insets(0, 0, 5, 5);
-		gbc_lblBiomeInput.anchor = GridBagConstraints.EAST;
-		gbc_lblBiomeInput.gridx = 5;
-		gbc_lblBiomeInput.gridy = 5;
-		contentPane.add(lblBiomeInput, gbc_lblBiomeInput);
+		lblImage = new JLabel("Image?");
+		GridBagConstraints gbc_lblImage = new GridBagConstraints();
+		gbc_lblImage.insets = new Insets(0, 0, 5, 5);
+		gbc_lblImage.gridx = 5;
+		gbc_lblImage.gridy = 5;
+		contentPane.add(lblImage, gbc_lblImage);
 
-		biomeInField = new JTextField();
-		GridBagConstraints gbc_biomeInField = new GridBagConstraints();
-		gbc_biomeInField.gridwidth = 3;
-		gbc_biomeInField.anchor = GridBagConstraints.SOUTH;
-		gbc_biomeInField.insets = new Insets(0, 0, 5, 5);
-		gbc_biomeInField.fill = GridBagConstraints.HORIZONTAL;
-		gbc_biomeInField.gridx = 6;
-		gbc_biomeInField.gridy = 5;
-		contentPane.add(biomeInField, gbc_biomeInField);
-		biomeInField.setColumns(10);
+		lookupChk = new JCheckBox("");
+		lookupChk.setSelected(true);
+		GridBagConstraints gbc_lookupChk = new GridBagConstraints();
+		gbc_lookupChk.anchor = GridBagConstraints.WEST;
+		gbc_lookupChk.insets = new Insets(0, 0, 5, 5);
+		gbc_lookupChk.gridx = 6;
+		gbc_lookupChk.gridy = 5;
+		contentPane.add(lookupChk, gbc_lookupChk);
 		GridBagConstraints gbc_btnSaveImage = new GridBagConstraints();
 		gbc_btnSaveImage.gridwidth = 2;
 		gbc_btnSaveImage.insets = new Insets(0, 0, 5, 5);
-		gbc_btnSaveImage.gridx = 11;
+		gbc_btnSaveImage.gridx = 10;
 		gbc_btnSaveImage.gridy = 5;
 		contentPane.add(btnSaveImage, gbc_btnSaveImage);
 
 		JLabel lblFeatureSize = new JLabel("Feature Size");
 		GridBagConstraints gbc_lblFeatureSize = new GridBagConstraints();
-		gbc_lblFeatureSize.insets = new Insets(0, 0, 0, 5);
+		gbc_lblFeatureSize.insets = new Insets(0, 0, 5, 5);
 		gbc_lblFeatureSize.gridx = 1;
 		gbc_lblFeatureSize.gridy = 6;
 		contentPane.add(lblFeatureSize, gbc_lblFeatureSize);
 
 		featuresField = new JTextField();
 		GridBagConstraints gbc_featuresField = new GridBagConstraints();
+		gbc_featuresField.gridwidth = 2;
 		gbc_featuresField.fill = GridBagConstraints.HORIZONTAL;
-		gbc_featuresField.insets = new Insets(0, 0, 0, 5);
+		gbc_featuresField.insets = new Insets(0, 0, 5, 5);
 		gbc_featuresField.gridx = 2;
 		gbc_featuresField.gridy = 6;
 		contentPane.add(featuresField, gbc_featuresField);
 		featuresField.setColumns(4);
 
+		lblXFuzz = new JLabel("X Fuzz");
+		GridBagConstraints gbc_lblXFuzz = new GridBagConstraints();
+		gbc_lblXFuzz.insets = new Insets(0, 0, 5, 5);
+		gbc_lblXFuzz.gridx = 5;
+		gbc_lblXFuzz.gridy = 6;
+		contentPane.add(lblXFuzz, gbc_lblXFuzz);
+
+		xFuzzField = new JTextField();
+		GridBagConstraints gbc_xFuzzField = new GridBagConstraints();
+		gbc_xFuzzField.anchor = GridBagConstraints.WEST;
+		gbc_xFuzzField.insets = new Insets(0, 0, 5, 5);
+		gbc_xFuzzField.gridx = 6;
+		gbc_xFuzzField.gridy = 6;
+		contentPane.add(xFuzzField, gbc_xFuzzField);
+		xFuzzField.setColumns(10);
+
+		JLabel lblOctaves = new JLabel("Octaves");
+		GridBagConstraints gbc_lblOctaves = new GridBagConstraints();
+		gbc_lblOctaves.insets = new Insets(0, 0, 0, 5);
+		gbc_lblOctaves.gridx = 1;
+		gbc_lblOctaves.gridy = 7;
+		contentPane.add(lblOctaves, gbc_lblOctaves);
+
+		octavesField = new JTextField();
+		GridBagConstraints gbc_octavesField = new GridBagConstraints();
+		gbc_octavesField.gridwidth = 2;
+		gbc_octavesField.fill = GridBagConstraints.HORIZONTAL;
+		gbc_octavesField.insets = new Insets(0, 0, 0, 5);
+		gbc_octavesField.gridx = 2;
+		gbc_octavesField.gridy = 7;
+		contentPane.add(octavesField, gbc_octavesField);
+		octavesField.setColumns(4);
+
+		lblYFuzz = new JLabel("Y Fuzz");
+		GridBagConstraints gbc_lblYFuzz = new GridBagConstraints();
+		gbc_lblYFuzz.insets = new Insets(0, 0, 0, 5);
+		gbc_lblYFuzz.gridx = 5;
+		gbc_lblYFuzz.gridy = 7;
+		contentPane.add(lblYFuzz, gbc_lblYFuzz);
+
+		yFuzzField = new JTextField();
+		GridBagConstraints gbc_yFuzzField = new GridBagConstraints();
+		gbc_yFuzzField.anchor = GridBagConstraints.WEST;
+		gbc_yFuzzField.insets = new Insets(0, 0, 0, 5);
+		gbc_yFuzzField.gridx = 6;
+		gbc_yFuzzField.gridy = 7;
+		contentPane.add(yFuzzField, gbc_yFuzzField);
+		yFuzzField.setColumns(10);
+
 		setVisible(true);
+	}
+
+	public void init() {
+		heightField.setText("1024");
+		widthField.setText("1024");
+		seedField.setText("1");
+		featuresField.setText("512");
+		octavesField.setText("8");
+		seaField.setText("0.0");
+		xFuzzField.setText("0");
+		yFuzzField.setText("0");
+		btnRelief.doClick();
 	}
 
 	@Override
@@ -259,10 +330,17 @@ public class FrontEnd extends JFrame implements ActionListener {
 					lblPreview.setText("Humidity Map / Seed: " + seed);
 					generatedImage.setInfo(2, seed);
 				} else if (evt.getSource() == btnBiome) {
-					BufferedImage bioMap = ImageIO.read(new File("biomap//"+biomeInField.getText()+".png"));
-					double[][] tempMap = new TempMap(width,height,reliefMap).generate();
-					double[][] humidMap = new HumidMap(width,height,reliefMap).generate();
-					generatedImage.generateBiome(reliefMap,tempMap,humidMap,width,height,bioMap);
+
+					double[][] tempMap = new TempMap(width, height, reliefMap).generate();
+					double[][] humidMap = new HumidMap(width, height, reliefMap).generate();
+					if (lookupChk.isSelected()) {
+						int xFuzz = Integer.parseInt(xFuzzField.getText());
+						int yFuzz = Integer.parseInt(yFuzzField.getText());
+						BufferedImage bioMap = ImageIO.read(new File("biomap//" + biomeInField.getText() + ".png"));
+						generatedImage.generateBiomeFromImage(reliefMap, tempMap, humidMap, width, height, bioMap,
+								xFuzz, yFuzz);
+					} else
+						generatedImage.generateBiomeFromLookup(reliefMap, tempMap, humidMap, width, height);
 					lblPreview.setText("Biome Map / Seed: " + seed);
 					generatedImage.setInfo(3, seed);
 				}

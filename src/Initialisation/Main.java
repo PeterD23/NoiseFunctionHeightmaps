@@ -8,7 +8,8 @@ public class Main implements Constants {
 	public static void main(String[] args) throws Exception {
 
 		FrontEnd fEnd = new FrontEnd();
-//		int width = 1024;
+		fEnd.init();
+		//		int width = 1024;
 //		int height = 1024;
 //		Voronoi voronoi = new Voronoi(100,(short)256);
 //		BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);

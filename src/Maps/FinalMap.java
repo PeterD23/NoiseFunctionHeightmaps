@@ -40,7 +40,7 @@ public class FinalMap implements Constants {
 		}
 	}
 
-	public void generateFromImage(String imageFile) {
+	public void generateFromImage(String imageFile, int xFuzz, int yFuzz) {
 		Biome biome = new Biome(reliefMap, tempMap, humidMap);
 		BufferedImage biomap  = null;
 		try
@@ -55,7 +55,7 @@ public class FinalMap implements Constants {
 
 		for (int y = 0; y < HEIGHT; y++) {
 			for (int x = 0; x < WIDTH; x++) {
-				image.setRGB(x, y,biome.getBiomeTypeFromImage(x, y,biomap));
+				image.setRGB(x, y,biome.getBiomeTypeFromImage(x, y,biomap, xFuzz, yFuzz));
 			}
 		}
 		try {
