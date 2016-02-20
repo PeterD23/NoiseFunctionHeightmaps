@@ -44,8 +44,6 @@ public class Biome implements Constants {
 		// Return heightmap RGB
 
 		if (height < 0.0)
-			// Uhhh.... What did I write here? It works, but I'd appreciate if
-			// you figured it out, future me!
 			return oceanBiome(height);
 		else if (height < 0.6)
 			return new Color(0, 30 + (int) (height / 2 * 255), 0).getRGB();
@@ -71,18 +69,40 @@ public class Biome implements Constants {
 
 		double height = reliefMap[x][y];
 
-		double xTemp = normalise(0, 100, tempMap[x][y]) * img.getWidth(null);
-		double yHumidity = normalise(0, 100, humidMap[x][y] - 1) * img.getHeight(null);
+		// Crunch the values of the temperature and humidity map to ensure they fit within the bounds of the lookup image
+		double xTemp = normalise(0, 100, tempMap[x][y]) * (img.getWidth(null) - 1);
+		double yHumidity = normalise(0, 100, humidMap[x][y]) * (img.getHeight(null) - 1);
 
-		// System.out.println(xTemp+","+yHumidity);
+		// Enforce a limit on the fuzzed coordinates so they don't fall out of bounds
+		int hum = (int) limit(0, img.getWidth(null) - 1, xTemp + randomX);
+		int temp = (int) limit(0, img.getHeight(null) - 1, yHumidity + randomY);
+		
+		try {
+			if (height > 0) {
+				return img.getRGB(hum, temp);
+			}
 
-		if (height > 0)
-			return img.getRGB((int) xTemp + randomX, (int) yHumidity + randomY);
-		else
-			return oceanBiome(height);
+			else
+				return oceanBiome(height);
+		} catch (Exception e) {
+			System.out.println(hum + "," + temp);
+			return 0;
+		}
 
 	}
 
+	
+	public double limit(double min, double max, double val) {
+		if (val < min)
+			return min;
+		if (val > max)
+			return max;
+		return val;
+	}
+
+	/*
+	 * This creates an ocean biome with darker coloured water for deeper levels below 0.
+	 */
 	public int oceanBiome(double height) {
 		return new Color(0, Math.abs(140 - (OCEAN_MIN + (int) Math.abs(height / 2 * 160))),
 				Math.abs(210 - (OCEAN_MIN + (int) Math.abs(height * 150)))).getRGB();

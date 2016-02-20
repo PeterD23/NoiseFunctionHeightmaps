@@ -84,20 +84,6 @@ public class ReliefMap implements Constants {
 			frequency *= lacunarity;
 			amplitude *= gain;
 		}
-
-		// float island_radius = (float) FEATURE_SIZE/4;
-		//
-		// //float xmid = (x-(WIDTH/2))/WIDTH;
-		// //float ymid = (y-(HEIGHT/2))/HEIGHT;
-		//
-		// float xn = x/ island_radius - 1;
-		// float yn = y/ island_radius - 1;
-		//
-		//
-		//
-		// float island_base = 1 - xn*xn - yn*yn;
-		//
-		// total += island_base;
 	}
 	// System.out.println(total);
 
