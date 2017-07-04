@@ -316,34 +316,37 @@ public class FrontEnd extends JFrame implements ActionListener {
 				long seed = Long.parseLong(seedField.getText());
 				int octaves = Integer.parseInt(octavesField.getText());
 				double seaLevel = Double.parseDouble(seaField.getText());
-				double[][] reliefMap = new ReliefMap(width, height, features, octaves).generate(seed, 0, 0);
+				double[][] seaMap = new ReliefMap(width, height, features, octaves).generate(seed, 0, 0, false);
+				double[][] landMap = new ReliefMap(width, height, features, octaves).generate(seed, 0, 0, true);
 				if (evt.getSource() == btnRelief) {
-					generatedImage.generateRelief(reliefMap, width, height, seaLevel);
+					generatedImage.generateSea(seaMap, width, height);
+					generatedImage.generateLand(landMap, width, height);
 					lblPreview.setText("Relief Map/ Seed: " + seed);
 					generatedImage.setInfo(0, seed);
-				} else if (evt.getSource() == btnTemp) {
-					generatedImage.generateTemp(reliefMap, width, height);
-					lblPreview.setText("Temperature Map/ Seed: " + seed);
-					generatedImage.setInfo(1, seed);
-				} else if (evt.getSource() == btnHumid) {
-					generatedImage.generateHumidity(reliefMap, width, height);
-					lblPreview.setText("Humidity Map / Seed: " + seed);
-					generatedImage.setInfo(2, seed);
-				} else if (evt.getSource() == btnBiome) {
-
-					double[][] tempMap = new TempMap(width, height, reliefMap).generate();
-					double[][] humidMap = new HumidMap(width, height, reliefMap).generate();
-					if (lookupChk.isSelected()) {
-						int xFuzz = Integer.parseInt(xFuzzField.getText());
-						int yFuzz = Integer.parseInt(yFuzzField.getText());
-						BufferedImage bioMap = ImageIO.read(new File("biomap//" + biomeInField.getText() + ".png"));
-						generatedImage.generateBiomeFromImage(reliefMap, tempMap, humidMap, width, height, bioMap,
-								xFuzz, yFuzz);
-					} else
-						generatedImage.generateBiomeFromLookup(reliefMap, tempMap, humidMap, width, height);
-					lblPreview.setText("Biome Map / Seed: " + seed);
-					generatedImage.setInfo(3, seed);
 				}
+//				} else if (evt.getSource() == btnTemp) {
+//					generatedImage.generateTemp(reliefMap, width, height);
+//					lblPreview.setText("Temperature Map/ Seed: " + seed);
+//					generatedImage.setInfo(1, seed);
+//				} else if (evt.getSource() == btnHumid) {
+//					generatedImage.generateHumidity(reliefMap, width, height);
+//					lblPreview.setText("Humidity Map / Seed: " + seed);
+//					generatedImage.setInfo(2, seed);
+//				} else if (evt.getSource() == btnBiome) {
+//
+//					double[][] tempMap = new TempMap(width, height, reliefMap).generate();
+//					double[][] humidMap = new HumidMap(width, height, reliefMap).generate();
+//					if (lookupChk.isSelected()) {
+//						int xFuzz = Integer.parseInt(xFuzzField.getText());
+//						int yFuzz = Integer.parseInt(yFuzzField.getText());
+//						BufferedImage bioMap = ImageIO.read(new File("biomap//" + biomeInField.getText() + ".png"));
+//						generatedImage.generateBiomeFromImage(reliefMap, tempMap, humidMap, width, height, bioMap,
+//								xFuzz, yFuzz);
+//					} else
+//						generatedImage.generateBiomeFromLookup(reliefMap, tempMap, humidMap, width, height);
+//					lblPreview.setText("Biome Map / Seed: " + seed);
+//					generatedImage.setInfo(3, seed);
+//				}
 
 			} catch (Exception e) {
 				e.printStackTrace();

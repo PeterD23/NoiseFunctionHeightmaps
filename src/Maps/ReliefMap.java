@@ -2,22 +2,24 @@
 package Maps;
 
 import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.Random;
 
 import javax.imageio.ImageIO;
 
 import Generation.Constants;
 import Generation.OpenSimplexNoise;
 
-
 public class ReliefMap implements Constants {
 
 	private int width;
 	private int height;
 	private double feature_size;
+
+	private double[][] radial;
 
 	private float total, frequency, amplitude;
 	private int octaves = 16;
@@ -28,53 +30,45 @@ public class ReliefMap implements Constants {
 
 	// TODO: Add biomes
 
-	public ReliefMap(int width, int height, double feature_size){
+	public ReliefMap(int width, int height, double feature_size) {
 		this.width = width;
 		this.height = height;
 		this.feature_size = feature_size;
 	}
-	
-	public ReliefMap(int width, int height, double feature_size, int octaves){
+
+	public ReliefMap(int width, int height, double feature_size, int octaves) {
 		this.width = width;
 		this.height = height;
 		this.feature_size = feature_size;
 		this.octaves = octaves;
 	}
 
-	
-	public double[][] generate(long seed, int heightIndex, int widthIndex) throws IOException {
+	public double[][] generate(long seed, int heightIndex, int widthIndex, boolean land) throws IOException {
 		OpenSimplexNoise noise = new OpenSimplexNoise(seed);
 		double[][] map = new double[width][height];
+		initRadial();
 
-		float midx = width / 2;
-		float midy = height / 2;
-		float rad = (float) Math.sqrt((midx * midx) + (midy * midy));
+		for (int y = 0; y < height; y++) {
+			for (int x = 0; x < width; x++) {
 
-		//
-		
-				// TODO: FIX THIS
+				process(noise, x + widthIndex, y + heightIndex);
 
-				for (int y = 0; y < height; y++) {
-					for (int x = 0; x < width; x++) {
+				double value = total;
+				if (value > 1)
+					value = 1;
+				else if (value < -1)
+					value = -1;
 
-						process(noise, x + widthIndex, y + heightIndex, rad, midx, midy);
+				// System.out.println(value);
 
-						double value = total;
-						if (value > 1)
-							value = 1;
-						else if (value < -1)
-							value = -1;
+				map[x][y] = value * (land ? getRadialFactor(x, y) : 1);
 
-						// System.out.println(value);
-
-						map[x][y] = value;		
-						
-					}
-				}	
-				return map;
 			}
+		}
+		return map;
+	}
 
-	public void process(OpenSimplexNoise noise, int x, int y, float rad, float midx, float midy) {
+	public void process(OpenSimplexNoise noise, int x, int y) {
 		total = 0.0f;
 		frequency = 1.0f / (float) feature_size;
 		amplitude = gain;
@@ -87,5 +81,39 @@ public class ReliefMap implements Constants {
 	}
 	// System.out.println(total);
 
-}
+	public void initRadial() {
+		try {
+			BufferedImage radialImg = ImageIO.read(new File("tex\\radial.png"));
+			radialImg = resize(radialImg, width, height);
+			radial = new double[width][height];
+			for (int x = 0; x < width; x++) {
+				for (int y = 0; y < height; y++) {
+					double rgb = (double) radialImg.getRGB(x, y);
+					radial[x][y] = normaliseRGB(rgb, -16777216, -1, 0, 1);
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
+	public double normaliseRGB(final double valueIn, final double baseMin, final double baseMax, final double limitMin, final double limitMax) {
+        return ((limitMax - limitMin) * (valueIn - baseMin) / (baseMax - baseMin)) + limitMin;
+	}
+
+	public static BufferedImage resize(BufferedImage img, int newW, int newH) {
+		Image tmp = img.getScaledInstance(newW, newH, Image.SCALE_SMOOTH);
+		BufferedImage dimg = new BufferedImage(newW, newH, BufferedImage.TYPE_INT_ARGB);
+
+		Graphics2D g2d = dimg.createGraphics();
+		g2d.drawImage(tmp, 0, 0, null);
+		g2d.dispose();
+
+		return dimg;
+	}
+
+	public double getRadialFactor(int x, int y) {
+		return radial[x][y];
+	}
+
+}
