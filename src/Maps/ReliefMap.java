@@ -43,15 +43,16 @@ public class ReliefMap implements Constants {
 		this.octaves = octaves;
 	}
 
-	public double[][] generate(long seed, int heightIndex, int widthIndex, boolean land) throws IOException {
+	public double[][] generate(long seed, String radialStr, boolean land)
+			throws IOException {
 		OpenSimplexNoise noise = new OpenSimplexNoise(seed);
 		double[][] map = new double[width][height];
-		initRadial();
+		initRadial(radialStr);
 
 		for (int y = 0; y < height; y++) {
 			for (int x = 0; x < width; x++) {
 
-				process(noise, x + widthIndex, y + heightIndex);
+				process(noise, x, y);
 
 				double value = total;
 				if (value > 1)
@@ -81,9 +82,9 @@ public class ReliefMap implements Constants {
 	}
 	// System.out.println(total);
 
-	public void initRadial() {
+	public void initRadial(String radialStr) {
 		try {
-			BufferedImage radialImg = ImageIO.read(new File("tex\\radial.png"));
+			BufferedImage radialImg = ImageIO.read(new File("tex\\" + radialStr + ".png"));
 			radialImg = resize(radialImg, width, height);
 			radial = new double[width][height];
 			for (int x = 0; x < width; x++) {
@@ -93,12 +94,13 @@ public class ReliefMap implements Constants {
 				}
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			radial = null;
 		}
 	}
 
-	public double normaliseRGB(final double valueIn, final double baseMin, final double baseMax, final double limitMin, final double limitMax) {
-        return ((limitMax - limitMin) * (valueIn - baseMin) / (baseMax - baseMin)) + limitMin;
+	public double normaliseRGB(final double valueIn, final double baseMin, final double baseMax, final double limitMin,
+			final double limitMax) {
+		return ((limitMax - limitMin) * (valueIn - baseMin) / (baseMax - baseMin)) + limitMin;
 	}
 
 	public static BufferedImage resize(BufferedImage img, int newW, int newH) {
@@ -113,7 +115,10 @@ public class ReliefMap implements Constants {
 	}
 
 	public double getRadialFactor(int x, int y) {
-		return radial[x][y];
+		if (radial != null)
+			return radial[x][y];
+		else
+			return 1;
 	}
 
 }

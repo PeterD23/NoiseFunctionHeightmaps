@@ -2,14 +2,14 @@ package UserGUI;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
 import javax.imageio.ImageIO;
+import javax.swing.JFileChooser;
 import javax.swing.JPanel;
+import javax.swing.UIManager;
 
-import Generation.Biome;
 import Generation.Constants;
 
 public class GeneratedImage extends JPanel implements Constants {
@@ -17,23 +17,13 @@ public class GeneratedImage extends JPanel implements Constants {
 	private BufferedImage seaImg = null;
 	private BufferedImage landImg = null;
 
-	private final double HEIGHT_MODIFIER = 1.1;// Affects how much temp will
-												// drop from climbing heights
-	private final int MID_HEAT_INDEX = 300; // Increases how much heat will be
-											// at the centre that radiates out
-											// to the north and south
-
 	private int mode = 0;
 	private long seed = -1;
 	private String[] type = { "relief", "temp", "humid", "biome" };
 
 	public GeneratedImage() {
 		setSize(600, 600);
-		try {
-			landImg = ImageIO.read(new File("awesome.png"));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		landImg = new BufferedImage(600, 600, BufferedImage.TYPE_INT_RGB);
 	}
 
 	public void setInfo(int mode, long seed) {
@@ -50,6 +40,7 @@ public class GeneratedImage extends JPanel implements Constants {
 
 	public void generateSea(double relief[][], int width, int height) {
 		seaImg = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+
 		for (int y = 0; y < height; y++) {
 			for (int x = 0; x < width; x++) {
 
@@ -67,7 +58,7 @@ public class GeneratedImage extends JPanel implements Constants {
 
 	}
 
-	public void generateLand(double relief[][], int width, int height) {
+	public void generateLand(double relief[][], double sea, double mount, int width, int height) {
 
 		landImg = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 
@@ -77,9 +68,9 @@ public class GeneratedImage extends JPanel implements Constants {
 				double value = relief[x][y];
 
 				int rgb = 0;
-				if (value <= 0.0) {
+				if (value <= sea) {
 					rgb = new Color(0, 0, 0, 0).getRGB();
-				} else if (value < 0.6)
+				} else if (value < mount)
 					rgb = new Color(0, 10 + (int) (value / 2 * 255), 0, 255).getRGB();
 				else
 					rgb = new Color((int) ((value / 1.5 * 255)), (int) ((value / 3 * 255)), (int) ((value / 5 * 255)),
@@ -92,88 +83,22 @@ public class GeneratedImage extends JPanel implements Constants {
 
 	}
 
-//	public void generateTemp(double relief[][], int width, int height) {
-//		double midpoint = height / 2;
-//		double ambientTemp = 0;
-//
-//		for (int y = 0; y < height; y++) {
-//			for (int x = 0; x < width; x++) {
-//
-//				double value = 0;
-//				if (relief[x][y] > 0)
-//					value = ambientTemp - (ambientTemp / HEIGHT_MODIFIER * relief[x][y]);
-//				else
-//					value = ambientTemp / 2;
-//				// System.out.println(value);
-//				int color = new Color((int) ((255 * value) / 100), 0, (int) ((255 * (100 - value)) / 100)).getRGB();
-//
-//				image.setRGB(x, y, color);
-//
-//				repaint();
-//			}
-//			if (y < midpoint)
-//				ambientTemp = (y / midpoint) * MID_HEAT_INDEX / 2;
-//			else
-//				ambientTemp = MID_HEAT_INDEX - ((y / midpoint) * MID_HEAT_INDEX / 2);
-//
-//			if (ambientTemp > 100)
-//				ambientTemp = 100; // Cap the ambient to 100%
-//
-//		}
-//	}
-//
-//	public void generateHumidity(double relief[][], int width, int height) {
-//
-//		for (int y = 0; y < height; y++) {
-//			for (int x = 0; x < width; x++) {
-//
-//				double value = 0;
-//				if (relief[x][y] > 0)
-//					value = 100 - (relief[x][y] * 100);
-//				else
-//					value = 100;
-//				// System.out.println(value);
-//				// (int)((255 * (100 - value)) / 100)
-//				// (int)((255 * value) / 100)
-//
-//				int color = new Color((int) ((255 * (100 - value)) / 100), (int) ((255 * (100 - value)) / 100),
-//						(int) ((255 * value) / 100)).getRGB();
-//
-//				image.setRGB(x, y, color);
-//
-//				repaint();
-//			}
-//
-//		}
-//	}
-//
-//	public void generateBiomeFromLookup(double relief[][], double temp[][], double humid[][], int width, int height) {
-//		Biome biome = new Biome(relief, temp, humid);
-//		for (int y = 0; y < height; y++) {
-//			for (int x = 0; x < width; x++) {
-//				image.setRGB(x, y, biome.getBiomeType(x, y));
-//
-//				repaint();
-//			}
-//		}
-//	}
-//
-//	public void generateBiomeFromImage(double relief[][], double temp[][], double humid[][], int width, int height,
-//			BufferedImage bioMap, int xFuzz, int yFuzz) {
-//		Biome biome = new Biome(relief, temp, humid);
-//		for (int y = 0; y < height; y++) {
-//			for (int x = 0; x < width; x++) {
-//				image.setRGB(x, y, biome.getBiomeTypeFromImage(x, y, bioMap, xFuzz, yFuzz));
-//
-//				repaint();
-//			}
-//		}
-//	}
-
 	public void saveImage() {
 		try {
-			ImageIO.write(seaImg, "png", new File(String.format("tex//%d-%s.png", seed, "sea")));
-			ImageIO.write(landImg, "png", new File(String.format("tex//%d-%s.png", seed, "land")));
+			char sn = File.separatorChar;
+			
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+			JFileChooser chooser = new JFileChooser();
+			chooser.setCurrentDirectory(new File("."));
+			chooser.setDialogTitle("Set directory save");
+			chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+			int accept = chooser.showSaveDialog(this);
+			String dir = null;
+			if(accept == JFileChooser.APPROVE_OPTION){
+				dir = chooser.getSelectedFile().getAbsolutePath();
+				ImageIO.write(seaImg, "png", new File(String.format(dir + sn +"%d-%s.png", seed, "sea")));
+				ImageIO.write(landImg, "png", new File(String.format(dir + sn +"%d-%s.png", seed, "land")));
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
