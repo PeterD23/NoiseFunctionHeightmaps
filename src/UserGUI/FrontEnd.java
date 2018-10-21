@@ -5,12 +5,17 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
@@ -28,6 +33,10 @@ public class FrontEnd extends JFrame implements ActionListener {
 	private JLabel lblNewLabel;
 	private JTextField mountainLevel;
 	private JLabel lblMountainLevel;
+	private JLabel lblLandType;
+	private JComboBox<String> comboBox;
+	private JProgressBar genProg;
+	private JCheckBox genSea;
 
 	/**
 	 * Launch the application.
@@ -40,7 +49,7 @@ public class FrontEnd extends JFrame implements ActionListener {
 		setTitle("Realms of Ashjana Map Generator 1.0: Cartography for Dumbasses");
 		try {
 			setIconImage(new ImageIcon("res\\RoA.png").getImage());
-		} catch (Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		setResizable(false);
@@ -52,9 +61,9 @@ public class FrontEnd extends JFrame implements ActionListener {
 		GridBagLayout gbl_contentPane = new GridBagLayout();
 		gbl_contentPane.columnWidths = new int[] { 0, 50, 35, 0, 0, 0, 72, 97, 0, 66, 70, 57, 0, 0, 0 };
 		gbl_contentPane.rowHeights = new int[] { 0, 0, 550, 0, 0, 0, 0, 0, 0 };
-		gbl_contentPane.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0,
+		gbl_contentPane.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0,
 				0.0, Double.MIN_VALUE };
-		gbl_contentPane.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
+		gbl_contentPane.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE };
 		contentPane.setLayout(gbl_contentPane);
 
 		lblPreview = new JLabel("Preview");
@@ -111,13 +120,20 @@ public class FrontEnd extends JFrame implements ActionListener {
 		contentPane.add(octavesField, gbc_octavesField);
 		octavesField.setColumns(4);
 		GridBagConstraints gbc_btnRelief = new GridBagConstraints();
-		gbc_btnRelief.gridheight = 2;
 		gbc_btnRelief.gridwidth = 2;
 		gbc_btnRelief.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnRelief.insets = new Insets(0, 0, 5, 5);
 		gbc_btnRelief.gridx = 9;
 		gbc_btnRelief.gridy = 3;
 		contentPane.add(btnRelief, gbc_btnRelief);
+
+		genSea = new JCheckBox("S");
+		GridBagConstraints gbc_genSea = new GridBagConstraints();
+		gbc_genSea.anchor = GridBagConstraints.WEST;
+		gbc_genSea.insets = new Insets(0, 0, 5, 5);
+		gbc_genSea.gridx = 11;
+		gbc_genSea.gridy = 3;
+		contentPane.add(genSea, gbc_genSea);
 
 		JLabel lblHeight = new JLabel("Height");
 		GridBagConstraints gbc_lblHeight = new GridBagConstraints();
@@ -151,6 +167,15 @@ public class FrontEnd extends JFrame implements ActionListener {
 		gbc_seaField.gridx = 6;
 		gbc_seaField.gridy = 4;
 		contentPane.add(seaField, gbc_seaField);
+
+		genProg = new JProgressBar();
+		GridBagConstraints gbc_genProg = new GridBagConstraints();
+		gbc_genProg.fill = GridBagConstraints.HORIZONTAL;
+		gbc_genProg.gridwidth = 2;
+		gbc_genProg.insets = new Insets(0, 0, 5, 5);
+		gbc_genProg.gridx = 9;
+		gbc_genProg.gridy = 4;
+		contentPane.add(genProg, gbc_genProg);
 
 		JLabel lblSeed = new JLabel("Seed");
 		GridBagConstraints gbc_lblSeed = new GridBagConstraints();
@@ -190,7 +215,6 @@ public class FrontEnd extends JFrame implements ActionListener {
 		btnSaveImage.addActionListener(this);
 		GridBagConstraints gbc_btnSaveImage = new GridBagConstraints();
 		gbc_btnSaveImage.fill = GridBagConstraints.HORIZONTAL;
-		gbc_btnSaveImage.gridheight = 2;
 		gbc_btnSaveImage.gridwidth = 2;
 		gbc_btnSaveImage.insets = new Insets(0, 0, 5, 5);
 		gbc_btnSaveImage.gridx = 9;
@@ -233,6 +257,23 @@ public class FrontEnd extends JFrame implements ActionListener {
 		contentPane.add(radialField, gbc_radialField);
 		radialField.setColumns(10);
 
+		lblLandType = new JLabel("Land Type");
+		GridBagConstraints gbc_lblLandType = new GridBagConstraints();
+		gbc_lblLandType.anchor = GridBagConstraints.EAST;
+		gbc_lblLandType.insets = new Insets(0, 0, 0, 5);
+		gbc_lblLandType.gridx = 5;
+		gbc_lblLandType.gridy = 7;
+		contentPane.add(lblLandType, gbc_lblLandType);
+
+		comboBox = new JComboBox();
+		comboBox.setModel(new DefaultComboBoxModel(new String[] { "forest", "desert", "tundra" }));
+		GridBagConstraints gbc_comboBox = new GridBagConstraints();
+		gbc_comboBox.insets = new Insets(0, 0, 0, 5);
+		gbc_comboBox.fill = GridBagConstraints.HORIZONTAL;
+		gbc_comboBox.gridx = 6;
+		gbc_comboBox.gridy = 7;
+		contentPane.add(comboBox, gbc_comboBox);
+
 		setVisible(true);
 	}
 
@@ -240,7 +281,7 @@ public class FrontEnd extends JFrame implements ActionListener {
 		heightField.setText("1024");
 		widthField.setText("1024");
 		seedField.setText("1");
-		featuresField.setText("512");
+		featuresField.setText("0.5");
 		octavesField.setText("8");
 		seaField.setText("0.04");
 		mountainLevel.setText("0.5");
@@ -253,23 +294,18 @@ public class FrontEnd extends JFrame implements ActionListener {
 			generatedImage.saveImage();
 		} else {
 			try {
-				lblPreview.setText("Processing...");
-				int width = Integer.parseInt(widthField.getText());
-				int height = Integer.parseInt(heightField.getText());
-				double features = Double.parseDouble(featuresField.getText());
-				long seed = Long.parseLong(seedField.getText());
-				int octaves = Integer.parseInt(octavesField.getText());
-				double seaLevel = Math.abs(Double.parseDouble(seaField.getText()));
-				double mountLevel = Math.abs(Double.parseDouble(mountainLevel.getText()));
-				String radial = radialField.getText();
-				double[][] seaMap = new ReliefMap(width, height, features, octaves).generate(seed, radial, false);
-				double[][] landMap = new ReliefMap(width, height, features, octaves).generate(seed, radial, true);
-				if (evt.getSource() == btnRelief) {
-					generatedImage.generateSea(seaMap, width, height);
-					generatedImage.generateLand(landMap, seaLevel, mountLevel, width, height);
-					lblPreview.setText("Relief Map/ Seed: " + seed);
-					generatedImage.setInfo(0, seed);
-				}
+				genProg.setValue(0);
+
+				new Thread(() -> {
+					btnRelief.setEnabled(false);
+					try {
+						generate(evt, genSea.isSelected());
+					} catch (Exception e) {
+						e.printStackTrace();
+					} finally {
+						btnRelief.setEnabled(true);
+					}
+				}).start();
 
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -277,6 +313,26 @@ public class FrontEnd extends JFrame implements ActionListener {
 
 			}
 		}
+
+	}
+
+	private void generate(ActionEvent evt, boolean generateSea) throws IOException {
+		lblPreview.setText("Processing...");
+		int square = Integer.parseInt(widthField.getText());
+		double features = Double.parseDouble(featuresField.getText());
+		long seed = Long.parseLong(seedField.getText());
+		int octaves = Integer.parseInt(octavesField.getText());
+		double seaLevel = Math.abs(Double.parseDouble(seaField.getText()));
+		double mountLevel = Math.abs(Double.parseDouble(mountainLevel.getText()));
+		String radial = radialField.getText();
+		if (generateSea) {
+			double[][] seaMap = new ReliefMap(square, features, octaves).initBar(genProg).generate(seed, radial, false);
+			generatedImage.generateSea(seaMap, square);
+		}
+		double[][] landMap = new ReliefMap(square, features, octaves).initBar(genProg).generate(seed, radial, true);
+		generatedImage.generateLand(landMap, seaLevel, mountLevel, square, (String) comboBox.getSelectedItem());
+		lblPreview.setText("Relief Map/ Seed: " + seed);
+		generatedImage.setInfo(0, seed);
 
 	}
 
